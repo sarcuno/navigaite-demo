@@ -3,37 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NavigAite™ Simulator | Deloitte Forensic</title>
+    <title>NavigAite™ Simulator | Deloitte Forensic Argentina</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @keyframes pulse-slow { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .animate-pulse-slow { animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    </style>
 </head>
-<body class="bg-slate-100 p-4">
-    <div id="root"></div>
-    <script>
-        // Lógica simplificada para que funcione directo en el navegador
-        document.getElementById('root').innerHTML = `
-            <div class="max-w-md mx-auto bg-white p-6 rounded-xl shadow-lg border-t-4 border-blue-900">
-                <h1 class="text-xl font-bold text-blue-900">NavigAite™ Experience</h1>
-                <p class="text-sm text-gray-500 mb-4">Forensic Services Argentina</p>
-                <div id="content" class="space-y-4">
-                    <p class="text-sm">Denuncia: Sobreprecios en licitaciones.</p>
-                    <button onclick="analizar()" class="w-full bg-blue-900 text-white py-2 rounded">Iniciar Análisis IA</button>
-                </div>
-            </div>
-        `;
+<body class="bg-slate-100 min-h-screen flex items-center justify-center p-4">
 
-        function analizar() {
-            const content = document.getElementById('content');
-            content.innerHTML = '<p class="text-blue-600 animate-pulse">Procesando 100,000 correos...</p>';
-            setTimeout(() => {
+    <div id="simulator-card" class="max-w-xl w-full bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden font-sans">
+        <div class="bg-blue-900 p-6 text-white flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">NavigAite™ <span class="text-blue-400">Review</span></h1>
+                <p class="text-xs opacity-80 uppercase tracking-widest">Forensic Services | Argentina Practice</p>
+            </div>
+            <i data-lucide="brain-circuit" class="w-10 h-10 text-blue-400"></i>
+        </div>
+
+        <div id="step-content" class="p-8">
+            </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let selectedPrompt = null;
+
+        const content = document.getElementById('step-content');
+
+        function renderStep() {
+            if (currentStep === 1) {
                 content.innerHTML = `
-                    <div class="p-3 bg-red-50 border-l-4 border-red-500 text-xs">
-                        <strong>EVIDENCIA DETECTADA:</strong> "Adjudiquen directamente hoy. No cuestionen el precio."
-                        <br><br>
-                        <strong>Razonamiento NavigAite:</strong> Elusión deliberada de licitación competitiva.
+                    <div class="space-y-6">
+                        <div class="bg-amber-50 border-l-4 border-amber-400 p-4">
+                            <p class="text-sm text-amber-800"><strong>CASO:</strong> Denuncia por adjudicación directa y sobreprecios en el Sector Oil & Gas.</p>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800 tracking-tight text-center">PASO 1: Configura el Prompt de IA</h2>
+                        <div class="grid gap-4">
+                            <button onclick="selectPrompt('A')" id="btnA" class="p-4 border-2 rounded-xl text-left transition-all hover:border-blue-500 bg-white">
+                                <strong class="block text-blue-900">Opción A (Básica)</strong>
+                                <span class="text-sm text-slate-500 italic">Buscar "Fraude", "Dinero" o nombres de proveedores.</span>
+                            </button>
+                            <button onclick="selectPrompt('B')" id="btnB" class="p-4 border-2 rounded-xl text-left transition-all hover:border-blue-500 bg-white">
+                                <strong class="block text-blue-900">Opción B (Forense/NavigAite)</strong>
+                                <span class="text-sm text-slate-500 italic">Identificar elusión de licitación, presión jerárquica y urgencias operativas dudosas.</span>
+                            </button>
+                        </div>
+                        <button id="nextBtn" disabled onclick="goToStep(2)" class="w-full bg-blue-900 text-white py-4 rounded-xl font-bold text-lg shadow-lg opacity-50 cursor-not-allowed transition-all">
+                            Procesar Datos con IA
+                        </button>
                     </div>
-                    <button onclick="location.reload()" class="text-xs text-blue-800 underline">Reiniciar</button>
                 `;
+            } else if (currentStep === 2) {
+                content.innerHTML = `
+                    <div class="text-center py-10 space-y-6">
+                        <div class="relative inline-block">
+                            <i data-lucide="activity" class="w-20 h-20 text-blue-600 animate-pulse-slow mx-auto"></i>
+                        </div>
+                        <h2 class="text-xl font-bold text-slate-800">NavigAite™ está razonando...</h2>
+                        <p class="text-slate-500">Analizando 100,000 comunicaciones y documentos adjuntos bajo el criterio seleccionado.</p>
+                        <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                            <div class="bg-blue-600 h-full animate-[progress_2s_ease-in-out]" style="width: 100%"></div>
+                        </div>
+                    </div>
+                `;
+                setTimeout(() => goToStep(3), 3000);
+            } else if (currentStep === 3) {
+                content.innerHTML = `
+                    <div class="space-y-6">
+                        <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                            <i data-lucide="search" class="text-blue-600"></i> Hallazgos de la Investigación
+                        </h2>
+                        
+                        <div class="border rounded-xl p-4 bg-white shadow-sm border-l-4 border-red-500">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-xs font-bold text-red-600 uppercase tracking-tighter bg-red-50 px-2 py-1 rounded">EVIDENCIA RELEVANTE</span>
+                                <span class="text-[10px] text-slate-400">ID: #8842-EM</span>
+                            </div>
+                            <p class="text-sm font-bold text-slate-700">De: Gerente Operaciones</p>
+                            <p class="text-xs text-slate-500 mb-3 italic">"Adjudiquen directamente hoy. No hay tiempo para licitar... No me cuestionen el precio."</p>
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                                <p class="text-[10px] font-bold text-blue-900 uppercase">Razonamiento NavigAite™:</p>
+                                <p class="text-xs text-slate-700 leading-relaxed">Detección de presión jerárquica para eludir controles de cumplimiento y favorecer a un proveedor específico bajo falsa urgencia.</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-900 text-white p-6 rounded-xl text-center space-y-4 shadow-xl">
+                            <i data-lucide="check-circle" class="w-12 h-12 text-green-400 mx-auto"></i>
+                            <h3 class="font-bold">¡Objetivo Logrado!</h3>
+                            <p class="text-sm opacity-90">Has reducido 3 semanas de revisión manual a solo segundos de análisis inteligente.</p>
+                            <button onclick="goToStep(1)" class="text-xs underline opacity-70 hover:opacity-100">Reiniciar Simulación</button>
+                        </div>
+                    </div>
+                `;
+            }
+            lucide.createIcons();
+        }
+
+        function selectPrompt(option) {
+            selectedPrompt = option;
+            document.getElementById('btnA').classList.remove('border-blue-500', 'bg-blue-50');
+            document.getElementById('btnB').classList.remove('border-blue-500', 'bg-blue-50');
+            
+            const selectedBtn = document.getElementById('btn' + option);
+            selectedBtn.classList.add('border-blue-500', 'bg-blue-50');
+            
+            const nextBtn = document.getElementById('nextBtn');
+            nextBtn.disabled = false;
+            nextBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+
+        function goToStep(step) {
+            currentStep = step;
+            renderStep();
+        }
+
+        // Inicializar
+        renderStep();
+    </script>
+
+    <style>
+        @keyframes progress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+    </style>
+</body>
+</html>
             }, 2000);
         }
     </script>
